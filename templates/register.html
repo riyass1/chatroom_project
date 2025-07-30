@@ -1,0 +1,77 @@
+
+<!-- templates/register.html -->
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>ثبت‌نام در چت‌روم</title>
+    <style>
+        body {
+            background-image: url("/static/new_image.jpg");
+            background-size: cover;
+            font-family: Tahoma, sans-serif;
+            color: white;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        form {
+            background-color: rgba(0, 0, 0, 0.5);
+            display: inline-block;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #2196F3;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0b7dda;
+        }
+
+        .link-button {
+            margin-top: 15px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .link-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>ثبت‌نام کاربر جدید</h1>
+
+    {% if message %}
+        <p style="color: lightgreen;">{{ message }}</p>
+    {% endif %}
+
+    <form method="POST">
+        <input type="text" name="username" placeholder="نام کاربری جدید" required><br>
+        <input type="password" name="password" placeholder="رمز عبور" required><br>
+        <button type="submit">تایید ثبت‌نام</button>
+    </form>
+
+    <br>
+
+    <a href="/" class="link-button">بازگشت به صفحه ورود</a>
+</body>
+</html>

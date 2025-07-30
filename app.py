@@ -6,13 +6,38 @@ app = Flask(__name__)
 app.secret_key = 'chatroom_secret_key'
 socketio = SocketIO(app)
 
+# شبیه پایگاه داده ساده در حافظه
+users = {}
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    error = None
     if request.method == 'POST':
         username = request.form['username']
-        session['username'] = username
-        return redirect('/chat')
-    return render_template('login.html')
+        password = request.form['password']
+
+        if username in users and users[username] == password:
+            session['username'] = username
+            return redirect('/chat')
+        else:
+            error = "نام کاربری یا رمز اشتباهه."
+
+    return render_template('login.html', error=error)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    message = None
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        if username in users:
+            message = "این نام کاربری قبلاً ثبت شده."
+        else:
+            users[username] = password
+            message = "ثبت‌نام با موفقیت انجام شد!"
+
+    return render_template('register.html', message=message)
 
 @app.route('/chat')
 def chat():
