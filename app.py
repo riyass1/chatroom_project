@@ -1,13 +1,24 @@
 from flask import Flask, render_template, request, redirect, session
 from flask_socketio import SocketIO, emit
 import os
+import hashlib
 
 app = Flask(__name__)
 app.secret_key = 'chatroom_secret_key'
 socketio = SocketIO(app)
 
-# شبیه پایگاه داده ساده در حافظه
+# تابع هش کردن رمز عبور
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+# لود کاربران از فایل
 users = {}
+if os.path.exists('users.txt'):
+    with open('users.txt', 'r') as f:
+        for line in f:
+            if ':' in line:
+                username, password = line.strip().split(':')
+                users[username] = password
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -15,12 +26,13 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        hashed = hash_password(password)
 
-        if username in users and users[username] == password:
+        if username in users and users[username] == hashed:
             session['username'] = username
             return redirect('/chat')
         else:
-            error = "نام کاربری یا رمز اشتباهه."
+            error = "نام کاربری یا رمز اشتباه است."
 
     return render_template('login.html', error=error)
 
@@ -30,11 +42,14 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        hashed = hash_password(password)
 
         if username in users:
-            message = "این نام کاربری قبلاً ثبت شده."
+            message = "این نام کاربری قبلاً ثبت شده است."
         else:
-            users[username] = password
+            users[username] = hashed
+            with open('users.txt', 'a') as f:
+                f.write(f"{username}:{hashed}\n")
             message = "ثبت‌نام با موفقیت انجام شد!"
 
     return render_template('register.html', message=message)

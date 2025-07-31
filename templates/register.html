@@ -1,14 +1,14 @@
-
-<!-- templates/register.html -->
 <!DOCTYPE html>
 <html lang="fa">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ثبت‌نام در چت‌روم</title>
     <style>
         body {
             background-image: url("/static/new_image.jpg");
             background-size: cover;
+            background-position: center;
             font-family: Tahoma, sans-serif;
             color: white;
             text-align: center;
@@ -16,44 +16,58 @@
         }
 
         form {
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.6);
             display: inline-block;
             padding: 20px;
             border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
         }
 
         input {
             padding: 10px;
-            margin: 10px;
+            margin: 10px 0;
+            width: 100%;
             border: none;
             border-radius: 5px;
         }
 
-        button {
-            padding: 10px 20px;
-            background-color: #2196F3;
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
             border: none;
+            border-radius: 5px;
             color: white;
-            border-radius: 5px;
             cursor: pointer;
+            text-decoration: none;
+            text-align: center;
         }
 
-        button:hover {
+        .btn-register {
+            background-color: #4CAF50;
+        }
+
+        .btn-register:hover {
+            background-color: #45a049;
+        }
+
+        .btn-login {
+            background-color: #2196F3;
+        }
+
+        .btn-login:hover {
             background-color: #0b7dda;
         }
 
-        .link-button {
-            margin-top: 15px;
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .link-button:hover {
-            background-color: #45a049;
+        p {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -67,11 +81,11 @@
     <form method="POST">
         <input type="text" name="username" placeholder="نام کاربری جدید" required><br>
         <input type="password" name="password" placeholder="رمز عبور" required><br>
-        <button type="submit">تایید ثبت‌نام</button>
+
+        <div class="btn-container">
+            <button type="submit" class="btn btn-register">تایید ثبت‌نام</button>
+            <a href="/" class="btn btn-login">ورود به حساب</a>
+        </div>
     </form>
-
-    <br>
-
-    <a href="/" class="link-button">بازگشت به صفحه ورود</a>
 </body>
 </html>

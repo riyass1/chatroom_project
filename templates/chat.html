@@ -1,97 +1,265 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-    <meta charset="UTF-8" />
-    <title>چت روم ساده</title>
-    <style>
-        body {
-            background-image: url('/static/background.jpg');
-            background-size: cover;
-            font-family: Tahoma, sans-serif;
-            color: white;
-            margin: 0; padding: 0;
-            display: flex; flex-direction: column;
-            height: 100vh;
-        }
-        #chat-box {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background: rgba(0,0,0,0.6);
-            margin: 10px;
-            border-radius: 8px;
-        }
-        #message-form {
-            display: flex;
-            margin: 10px;
-        }
-        #message-input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 4px 0 0 4px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
-        #send-btn {
-            padding: 10px 20px;
-            border: none;
-            background-color: #28a745;
-            color: white;
-            font-size: 16px;
-            border-radius: 0 4px 4px 0;
-            cursor: pointer;
-        }
-        #send-btn:hover {
-            background-color: #218838;
-        }
-        audio {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            opacity: 0.5;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>چت روم ساده</title>
+  <style>
+    body {
+      background-image: url('/static/menu.jpg');
+      background-size: cover;
+      font-family: Tahoma, sans-serif;
+      color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: relative;
+    }
+
+    #chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: rgba(0,0,0,0.6);
+      margin: 10px;
+      border-radius: 8px;
+    }
+
+    #message-form {
+      display: flex;
+      margin: 10px;
+    }
+
+    #message-input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 4px 0 0 4px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
+    #send-btn {
+      padding: 10px 20px;
+      border: none;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+    }
+
+    #send-btn:hover {
+      background-color: #218838;
+    }
+
+    audio {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      opacity: 0.5;
+    }
+
+    /* منوی سه‌خطی */
+    .menu-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .menu-icon div {
+      width: 25px;
+      height: 3px;
+      background-color: white;
+      margin: 5px;
+      transition: 0.4s;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 230px;
+      background: rgba(30, 30, 30, 0.9);
+      padding: 20px;
+      border-radius: 16px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .sidebar.active {
+      display: flex;
+    }
+
+    .sidebar a {
+      padding: 10px;
+      background: rgba(80,80,80,0.6);
+      border-radius: 10px;
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: rgba(100,100,100,0.8);
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: rgba(0,0,0,0.3);
+      display: none;
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* پروفایل */
+    .profile-panel {
+      position: fixed;
+      top: 60px;
+      right: 50%;
+      transform: translateX(50%);
+      background: rgba(0, 0, 0, 0.8) url('/static/background.jpg') center/cover no-repeat;
+      padding: 20px;
+      border-radius: 16px;
+      color: white;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+      z-index: 1100;
+      width: 300px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      backdrop-filter: blur(6px);
+    }
+
+    .profile-panel.hidden {
+      display: none;
+    }
+
+    .profile-panel .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto;
+      border: 2px solid #999;
+    }
+
+    .profile-panel button {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .profile-panel button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
 </head>
 <body>
-    <div id="chat-box"></div>
-    <form id="message-form">
-        <input id="message-input" autocomplete="off" placeholder="پیام خود را بنویسید..." />
-        <button id="send-btn" type="submit">ارسال</button>
-    </form>
 
-    <audio src="/static/music.mp3" autoplay loop></audio>
+  <!-- منوی سه‌خطی -->
+  <div class="menu-icon" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
 
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <script>
-        const socket = io();
+  <!-- منوی کناری -->
+  <div class="sidebar" id="sidebar">
+    <a href="#" id="profile-btn">👤 پروفایل</a>
+    <a href="#">⚙️ تنظیمات</a>
+    <a href="#">ℹ️ درباره</a>
+    <a href="#">🚪 خروج</a>
+  </div>
 
-        const username = "{{ username }}";
+  <!-- پوشش خاکستری -->
+  <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
-        const chatBox = document.getElementById('chat-box');
-        const messageForm = document.getElementById('message-form');
-        const messageInput = document.getElementById('message-input');
+  <!-- پنجره پروفایل -->
+  <div id="profile-panel" class="profile-panel hidden">
+    <h2>پروفایل</h2>
+    <p><strong>نام کاربر:</strong> {{ username }}</p>
+    <img src="/static/meno.jpg" alt="Avatar" class="avatar">
+    <button onclick="closeProfile()">بستن</button>
+  </div>
 
-        socket.on('connect', () => {
-            socket.emit('join', { username });
-        });
+  <!-- چت -->
+  <div id="chat-box"></div>
+  <form id="message-form">
+    <input id="message-input" autocomplete="off" placeholder="پیام خود را بنویسید..." />
+    <button id="send-btn" type="submit">ارسال</button>
+  </form>
 
-        socket.on('message', data => {
-            const p = document.createElement('p');
-            p.innerHTML = `<b>${data.username}:</b> ${data.msg}`;
-            chatBox.appendChild(p);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
+  <audio src="/static/music.mp3" autoplay loop></audio>
 
-        messageForm.addEventListener('submit', e => {
-            e.preventDefault();
-            const msg = messageInput.value.trim();
-            if(msg.length > 0) {
-                socket.emit('message', { username, msg });
-                messageInput.value = '';
-            }
-        });
-    </script>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+    const username = "{{ username }}";
+    const chatBox = document.getElementById('chat-box');
+    const messageForm = document.getElementById('message-form');
+    const messageInput = document.getElementById('message-input');
+
+    socket.on('connect', () => {
+      socket.emit('join', { username });
+    });
+
+    socket.on('message', data => {
+      const p = document.createElement('p');
+      p.innerHTML = `<b>${data.username}:</b> ${data.msg}`;
+      chatBox.appendChild(p);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    messageForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const msg = messageInput.value.trim();
+      if (msg.length > 0) {
+        socket.emit('message', { username, msg });
+        messageInput.value = '';
+      }
+    });
+
+    function toggleMenu() {
+      document.getElementById('sidebar').classList.toggle('active');
+      document.getElementById('overlay').classList.toggle('active');
+    }
+
+    function closeMenu() {
+      document.getElementById('sidebar').classList.remove('active');
+      document.getElementById('overlay').classList.remove('active');
+    }
+
+    // نمایش پنل پروفایل
+    document.getElementById('profile-btn').addEventListener('click', () => {
+      closeMenu();
+      document.getElementById('profile-panel').classList.remove('hidden');
+    });
+
+    function closeProfile() {
+      document.getElementById('profile-panel').classList.add('hidden');
+    }
+  </script>
 </body>
 </html>
